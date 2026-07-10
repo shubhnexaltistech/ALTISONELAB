@@ -3,11 +3,11 @@ import clsx from "clsx";
 export type BadgeVariant = "default" | "success" | "warning" | "danger" | "info";
 
 const variants: Record<BadgeVariant, string> = {
-  default: "bg-slate-100 text-slate-700",
-  success: "bg-emerald-100 text-emerald-800",
-  warning: "bg-amber-100 text-amber-800",
-  danger: "bg-red-100 text-red-800",
-  info: "bg-blue-100 text-blue-800",
+  default: "bg-surface-container text-on-surface-variant",
+  success: "bg-[#d1fae5] text-[#065f46]",
+  warning: "bg-[#fef3c7] text-[#92400e]",
+  danger: "bg-error-container text-on-error-container",
+  info: "bg-primary-light text-primary",
 };
 
 export interface BadgeProps {
@@ -20,7 +20,7 @@ export function Badge({ children, variant = "default", className }: BadgeProps) 
   return (
     <span
       className={clsx(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-lg px-3 py-[0.35rem] text-[11px] font-bold",
         variants[variant],
         className
       )}
@@ -30,7 +30,7 @@ export function Badge({ children, variant = "default", className }: BadgeProps) 
   );
 }
 
-export function statusBadge(status: string) {
+export function statusBadge(status: string): BadgeVariant {
   const map: Record<string, BadgeVariant> = {
     pending: "warning",
     paid: "info",

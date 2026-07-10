@@ -8,6 +8,7 @@ from app.config import settings
 from app.models.application import Application
 from app.models.track import Track
 from app.models.user import User
+from app.models.settings import SiteSettings
 
 router = APIRouter()
 
@@ -30,7 +31,34 @@ class TrackResponse(BaseModel):
     id: str
     name: str
     code: str
+    slug: str
     description: Optional[str] = None
+    fee_inr: Optional[int] = None
+    duration: Optional[str] = None
+
+
+class TrackDetailResponse(TrackResponse):
+    highlights: Optional[str] = None
+    outcomes: Optional[str] = None
+
+
+class SettingsResponse(BaseModel):
+    site_name: str
+    enrollment_open: bool
+    contact_email: Optional[str] = None
+    application_fee_display: Optional[str] = None
+
+
+class NotifyRequest(BaseModel):
+    email: EmailStr
+    name: Optional[str] = None
+    track_id: Optional[str] = None
+
+
+class PaymentProofRequest(BaseModel):
+    application_id: str
+    reference: str
+    amount: Optional[int] = None
 
 
 class PaymentOrderRequest(BaseModel):
@@ -81,9 +109,64 @@ async def submit_application(body: ApplyRequest):
 async def list_tracks():
     tracks = await Track.find(Track.is_active == True).to_list()
     return [
-        TrackResponse(id=str(t.id), name=t.name, code=t.code, description=t.description)
+        TrackResponse(
+            id=str(t.id),
+            name=t.name,
+            code=t.code,
+            slug=(t.slug or t.code.lower()),
+            description=t.description,
+            fee_inr=t.fee_inr,
+            duration=t.duration,
+        )
         for t in tracks
     ]
+
+
+@router.get("/tracks/{slug}", response_model=TrackDetailResponse)
+async def get_track_by_slug(slug: str):
+    track = await Track.find_one(Track.slug == slug)
+    if not track:
+        track = await Track.find_one(Track.code == slug.upper())
+    if not track or not track.is_active:
+        raise HTTPException(status_code=404, detail="Track not found")
+    return TrackDetailResponse(
+        id=str(track.id),
+        name=track.name,
+        code=track.code,
+        slug=(track.slug or track.code.lower()),
+        description=track.description,
+        fee_inr=track.fee_inr,
+        duration=track.duration,
+        highlights=track.highlights,
+        outcomes=track.outcomes,
+    )
+
+
+@router.get("/settings", response_model=SettingsResponse)
+async def get_settings():
+    settings_doc = await SiteSettings.find_one(SiteSettings.key == "landing")
+    if not settings_doc:
+        settings_doc = SiteSettings()
+        await settings_doc.insert()
+    return SettingsResponse(
+        site_name=settings_doc.site_name,
+        enrollment_open=settings_doc.enrollment_open,
+        contact_email=settings_doc.contact_email,
+        application_fee_display=settings_doc.application_fee_display,
+    )
+
+
+@router.post("/notify", response_model=ApplyResponse)
+async def notify_interest(body: NotifyRequest):
+    return ApplyResponse(id="notify", message="Thanks! We will notify you when enrollment opens.")
+
+
+@router.post("/payment-proof", response_model=ApplyResponse)
+async def submit_payment_proof(body: PaymentProofRequest):
+    app = await Application.get(body.application_id)
+    if not app:
+        raise HTTPException(status_code=404, detail="Application not found")
+    return ApplyResponse(id=str(app.id), message="Payment proof received for review.")
 
 
 @router.get("/applications/{application_id}/status", response_model=ApplicationStatusResponse)

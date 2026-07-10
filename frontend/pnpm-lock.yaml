@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@tailwindcss/forms':
+        specifier: ^0.5.7
+        version: 0.5.11(tailwindcss@3.4.19)
       '@types/node':
         specifier: ^20.14.0
         version: 20.19.43
@@ -32,6 +35,9 @@ importers:
       '@itp/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@itp/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@itp/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -99,6 +105,9 @@ importers:
       '@itp/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@itp/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@itp/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -166,6 +175,9 @@ importers:
       '@itp/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@itp/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@itp/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -230,6 +242,9 @@ importers:
       '@itp/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@itp/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@itp/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -288,6 +303,9 @@ importers:
 
   packages/hooks:
     dependencies:
+      '@itp/types':
+        specifier: workspace:*
+        version: link:../types
       '@itp/utils':
         specifier: workspace:*
         version: link:../utils
@@ -307,6 +325,12 @@ importers:
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.31
+      typescript:
+        specifier: ^5.4.5
+        version: 5.9.3
+
+  packages/types:
+    devDependencies:
       typescript:
         specifier: ^5.4.5
         version: 5.9.3
@@ -764,6 +788,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@tailwindcss/forms@0.5.11':
+    resolution: {integrity: sha512-h9wegbZDPurxG22xZSoWtdzc41/OlNEUQERNqI/0fOwa2aVlWGu7C35E/x6LDyD3lgtztFSSjKZyuVM0hxhbgA==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1 || >= 4.0.0-alpha.20 || >= 4.0.0-beta.1'
+
   '@tanstack/query-core@5.101.2':
     resolution: {integrity: sha512-hH5MLoJhF7KaIGd7q3xTXGXvslI+GYlM1Z/35aSHHWaCJWB7XvTSHYuV3eM7tw+aE0mT/xMro4M4Q9rCGHT0lw==}
 
@@ -1191,6 +1220,10 @@ packages:
   mime-types@2.1.35:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
+
+  mini-svg-data-uri@1.4.4:
+    resolution: {integrity: sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==}
+    hasBin: true
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -1813,6 +1846,11 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.62.2':
     optional: true
 
+  '@tailwindcss/forms@0.5.11(tailwindcss@3.4.19)':
+    dependencies:
+      mini-svg-data-uri: 1.4.4
+      tailwindcss: 3.4.19
+
   '@tanstack/query-core@5.101.2': {}
 
   '@tanstack/react-query@5.101.2(react@18.3.1)':
@@ -2233,6 +2271,8 @@ snapshots:
   mime-types@2.1.35:
     dependencies:
       mime-db: 1.52.0
+
+  mini-svg-data-uri@1.4.4: {}
 
   ms@2.1.3: {}
 

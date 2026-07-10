@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_V1, parseJwtPayload, type UserRole } from "@itp/utils";
+import { API_V1, parseJwtPayload, type UserRole, apiClient } from "@itp/utils";
+import type { AuthUser } from "@itp/types";
 import { useAuthStore } from "./useAuth";
 
 export function useAuthBootstrap() {
   const [isBootstrapping, setIsBootstrapping] = useState(true);
   const setAuth = useAuthStore((s) => s.setAuth);
+  const setUser = useAuthStore((s) => s.setUser);
   const clearAuth = useAuthStore((s) => s.clearAuth);
 
   useEffect(() => {
@@ -22,6 +24,14 @@ export function useAuthBootstrap() {
         const role = payload?.role as UserRole | undefined;
         if (userId && role) {
           setAuth(data.access_token, userId, role);
+          try {
+            const { data: me } = await apiClient.get<AuthUser>("/auth/me", {
+              headers: { Authorization: `Bearer ${data.access_token}` },
+            });
+            setUser(me);
+          } catch {
+            // ignore
+          }
         } else {
           clearAuth();
         }
@@ -34,7 +44,7 @@ export function useAuthBootstrap() {
     return () => {
       cancelled = true;
     };
-  }, [setAuth, clearAuth]);
+  }, [setAuth, setUser, clearAuth]);
 
   return { isBootstrapping };
 }

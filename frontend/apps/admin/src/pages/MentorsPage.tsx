@@ -92,8 +92,8 @@ export default function MentorsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Mentors</h1>
-          <p className="text-sm text-slate-500">Manage mentor accounts and assignments</p>
+          <h1 className="text-2xl font-bold text-admin-text">Mentors</h1>
+          <p className="text-sm text-slate-400">Manage mentor accounts and assignments</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setAssignOpen(true)}><UserPlus className="h-4 w-4" /> Assign</Button>
@@ -137,14 +137,14 @@ export default function MentorsPage() {
         footer={<Button onClick={assignForm.handleSubmit((d) => assignMutation.mutate(d))} loading={assignMutation.isPending}>Assign</Button>}>
         <form className="space-y-4">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Mentor</label>
+            <label className="mb-1.5 block text-sm font-medium text-slate-300">Mentor</label>
             <select {...assignForm.register("mentor_id")} className="h-10 w-full rounded-lg border border-slate-300 px-3 text-sm">
               <option value="">Select mentor</option>
               {mentors?.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
             </select>
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Track</label>
+            <label className="mb-1.5 block text-sm font-medium text-slate-300">Track</label>
             <select {...assignForm.register("track_id")} className="h-10 w-full rounded-lg border border-slate-300 px-3 text-sm">
               <option value="">Select track</option>
               {tracks?.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}

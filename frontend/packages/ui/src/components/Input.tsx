@@ -13,7 +13,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={inputId} className="mb-1.5 block text-sm font-medium text-slate-700">
+          <label htmlFor={inputId} className="mb-2 block text-xs font-bold text-slate-600">
             {label}
           </label>
         )}
@@ -21,14 +21,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={clsx(
-            "flex h-10 w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50",
-            error ? "border-red-500" : "border-slate-300",
+            "flex w-full rounded-lg border bg-white px-3 py-3 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50",
+            error ? "border-error" : "border-[#cbd5e1]",
             className
           )}
           {...props}
         />
-        {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-        {hint && !error && <p className="mt-1 text-sm text-slate-500">{hint}</p>}
+        {error && <p className="mt-1 text-sm text-error">{error}</p>}
+        {hint && !error && <p className="mt-1 text-sm text-text-muted">{hint}</p>}
       </div>
     );
   }

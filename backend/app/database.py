@@ -14,6 +14,9 @@ from app.models.mentor_assignment import MentorAssignment
 from app.models.announcement import Announcement
 from app.models.payment import Payment
 from app.models.audit_log import AuditLog
+from app.models.assignment import Assignment
+from app.models.submission import Submission
+from app.models.settings import SiteSettings
 
 _motor_client: AsyncIOMotorClient | None = None
 
@@ -33,5 +36,6 @@ async def init_db():
             User, Application, Track, Module, TraineeProgress,
             Quiz, QuizAttempt, Worklog, Evaluation,
             MentorAssignment, Announcement, Payment, AuditLog,
+            Assignment, Submission, SiteSettings,
         ],
     )

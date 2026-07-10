@@ -4,7 +4,7 @@ import { z } from "zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { apiClient, getErrorMessage } from "@itp/utils";
-import { Button, Input, Card, CardHeader, Table, Badge, statusBadge, SkeletonTable } from "@itp/ui";
+import { Button, Input, Card, CardHeader, DataTable, Badge, statusBadge, SkeletonTable } from "@itp/ui";
 
 const schema = z.object({
   date: z.string().min(1, "Date required"),
@@ -50,25 +50,25 @@ export default function WorklogsPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="fade-in space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Worklogs</h1>
-        <p className="text-sm text-slate-500">Log your daily work for mentor review</p>
+        <h1 className="text-h2 text-text-main">Work Logs</h1>
+        <p className="text-body-sm text-text-muted">Log your daily work for mentor review</p>
       </div>
 
-      <Card>
+      <Card className="mb-0">
         <CardHeader title="Submit Worklog" />
         <form onSubmit={handleSubmit((d) => createMutation.mutate(d))} className="grid gap-4 sm:grid-cols-2">
           <Input label="Date" type="date" {...register("date")} error={errors.date?.message} />
           <Input label="Hours Worked" type="number" step="0.5" {...register("hours_worked")} error={errors.hours_worked?.message} />
           <div className="sm:col-span-2">
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">What did you work on?</label>
+            <label className="mb-2 block text-xs font-bold text-slate-600">What did you work on?</label>
             <textarea
               {...register("content")}
               rows={4}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full rounded-lg border border-[#cbd5e1] px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
-            {errors.content && <p className="mt-1 text-sm text-red-600">{errors.content.message}</p>}
+            {errors.content && <p className="mt-1 text-sm text-error">{errors.content.message}</p>}
           </div>
           <div className="sm:col-span-2">
             <Button type="submit" loading={createMutation.isPending}>Submit</Button>
@@ -76,8 +76,10 @@ export default function WorklogsPage() {
         </form>
       </Card>
 
-      {isLoading ? <SkeletonTable /> : (
-        <Table
+      {isLoading ? (
+        <SkeletonTable />
+      ) : (
+        <DataTable
           columns={[
             { key: "date", header: "Date" },
             { key: "hours_worked", header: "Hours" },

@@ -65,8 +65,8 @@ export default function TracksPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Tracks</h1>
-          <p className="text-sm text-slate-500">Manage internship tracks</p>
+          <h1 className="text-2xl font-bold text-admin-text">Tracks</h1>
+          <p className="text-sm text-slate-400">Manage internship tracks</p>
         </div>
         <Button onClick={() => setOpen(true)}><Plus className="h-4 w-4" /> Add Track</Button>
       </div>

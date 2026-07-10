@@ -19,6 +19,8 @@ from app.routers.admin import (
     quizzes as admin_quizzes,
     announcements as admin_announcements,
     analytics as admin_analytics,
+    employees as admin_employees,
+    upload as admin_upload,
 )
 from app.routers.lms import (
     dashboard as lms_dashboard,
@@ -29,6 +31,8 @@ from app.routers.lms import (
     evaluations as lms_evaluations,
     leaderboard as lms_leaderboard,
     announcements as lms_announcements,
+    assignments as lms_assignments,
+    tracker as lms_tracker,
 )
 from app.routers.mentor import (
     dashboard as mentor_dashboard,
@@ -109,6 +113,8 @@ def create_app() -> FastAPI:
     app.include_router(admin_quizzes.router, prefix=f"{prefix}/admin/quizzes", tags=["Admin - Quizzes"])
     app.include_router(admin_announcements.router, prefix=f"{prefix}/admin/announcements", tags=["Admin - Announcements"])
     app.include_router(admin_analytics.router, prefix=f"{prefix}/admin/analytics", tags=["Admin - Analytics"])
+    app.include_router(admin_employees.router, prefix=f"{prefix}/admin/employees", tags=["Admin - Employees"])
+    app.include_router(admin_upload.router, prefix=f"{prefix}/admin/upload", tags=["Admin - Upload"])
 
     app.include_router(lms_dashboard.router, prefix=f"{prefix}/lms", tags=["LMS"])
     app.include_router(lms_modules.router, prefix=f"{prefix}/lms/modules", tags=["LMS - Modules"])
@@ -118,6 +124,8 @@ def create_app() -> FastAPI:
     app.include_router(lms_evaluations.router, prefix=f"{prefix}/lms/evaluations", tags=["LMS - Evaluations"])
     app.include_router(lms_leaderboard.router, prefix=f"{prefix}/lms/leaderboard", tags=["LMS - Leaderboard"])
     app.include_router(lms_announcements.router, prefix=f"{prefix}/lms/announcements", tags=["LMS - Announcements"])
+    app.include_router(lms_assignments.router, prefix=f"{prefix}/lms/assignments", tags=["LMS - Assignments"])
+    app.include_router(lms_tracker.router, prefix=f"{prefix}/lms/tracker", tags=["LMS - Tracker"])
 
     app.include_router(mentor_dashboard.router, prefix=f"{prefix}/mentor", tags=["Mentor"])
     app.include_router(mentor_trainees.router, prefix=f"{prefix}/mentor/trainees", tags=["Mentor - Trainees"])

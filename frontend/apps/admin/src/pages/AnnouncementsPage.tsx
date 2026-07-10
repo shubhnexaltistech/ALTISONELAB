@@ -65,8 +65,8 @@ export default function AnnouncementsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Announcements</h1>
-          <p className="text-sm text-slate-500">Broadcast updates to trainees</p>
+          <h1 className="text-2xl font-bold text-admin-text">Announcements</h1>
+          <p className="text-sm text-slate-400">Broadcast updates to trainees</p>
         </div>
         <Button onClick={() => setOpen(true)}><Plus className="h-4 w-4" /> New</Button>
       </div>
@@ -101,7 +101,7 @@ export default function AnnouncementsPage() {
         <form className="space-y-4">
           <Input label="Title" {...register("title")} error={errors.title?.message} />
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Body</label>
+            <label className="mb-1.5 block text-sm font-medium text-slate-300">Body</label>
             <textarea {...register("body")} rows={4} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
             {errors.body && <p className="mt-1 text-sm text-red-600">{errors.body.message}</p>}
           </div>

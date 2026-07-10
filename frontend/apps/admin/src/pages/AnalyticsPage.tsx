@@ -28,25 +28,25 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Analytics</h1>
-        <p className="text-sm text-slate-500">Program performance insights</p>
+        <h1 className="text-2xl font-bold text-admin-text">Analytics</h1>
+        <p className="text-sm text-slate-400">Program performance insights</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
           <CardHeader title="Quiz Pass Rate" />
           <p className="text-3xl font-bold text-brand-600">{data.quizzes.pass_rate}%</p>
-          <p className="text-sm text-slate-500">{data.quizzes.total_attempts} total attempts</p>
+          <p className="text-sm text-slate-400">{data.quizzes.total_attempts} total attempts</p>
         </Card>
         <Card>
           <CardHeader title="Worklogs" />
           <p className="text-3xl font-bold text-emerald-600">{data.worklogs.approved}</p>
-          <p className="text-sm text-slate-500">of {data.worklogs.total} approved</p>
+          <p className="text-sm text-slate-400">of {data.worklogs.total} approved</p>
         </Card>
         <Card>
           <CardHeader title="Evaluations" />
           <p className="text-3xl font-bold text-violet-600">{data.evaluations.graded}</p>
-          <p className="text-sm text-slate-500">graded evaluations</p>
+          <p className="text-sm text-slate-400">graded evaluations</p>
         </Card>
       </div>
 
@@ -55,10 +55,12 @@ export default function AnalyticsPage() {
           <CardHeader title="Trainees by Track" />
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data.tracks}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="track_name" tick={{ fontSize: 12 }} />
-              <YAxis />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
+              <XAxis dataKey="track_name" tick={{ fontSize: 12, fill: "#94a3b8" }} />
+              <YAxis tick={{ fill: "#94a3b8" }} />
+              <Tooltip
+                contentStyle={{ background: "#161A26", border: "1px solid rgba(255,255,255,0.1)", color: "#F1F5F9" }}
+              />
               <Bar dataKey="trainees" fill="#2563eb" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -73,8 +75,10 @@ export default function AnalyticsPage() {
                   <Cell key={i} fill={COLORS[i % COLORS.length]} />
                 ))}
               </Pie>
-              <Legend />
-              <Tooltip />
+              <Legend wrapperStyle={{ color: "#cbd5e1" }} />
+              <Tooltip
+                contentStyle={{ background: "#161A26", border: "1px solid rgba(255,255,255,0.1)", color: "#F1F5F9" }}
+              />
             </PieChart>
           </ResponsiveContainer>
         </Card>

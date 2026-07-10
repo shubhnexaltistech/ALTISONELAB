@@ -1,12 +1,15 @@
 import { create } from "zustand";
 import { apiClient, configureApiClient, parseJwtPayload, type UserRole } from "@itp/utils";
+import type { AuthUser } from "@itp/types";
 
 export interface AuthState {
   accessToken: string | null;
   userId: string | null;
   role: UserRole | null;
+  user: AuthUser | null;
   isAuthenticated: boolean;
-  setAuth: (token: string, userId: string, role: UserRole) => void;
+  setAuth: (token: string, userId: string, role: UserRole, user?: AuthUser | null) => void;
+  setUser: (user: AuthUser | null) => void;
   clearAuth: () => void;
 }
 
@@ -14,11 +17,13 @@ export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   userId: null,
   role: null,
+  user: null,
   isAuthenticated: false,
-  setAuth: (accessToken, userId, role) =>
-    set({ accessToken, userId, role, isAuthenticated: true }),
+  setAuth: (accessToken, userId, role, user = null) =>
+    set({ accessToken, userId, role, user, isAuthenticated: true }),
+  setUser: (user) => set({ user }),
   clearAuth: () =>
-    set({ accessToken: null, userId: null, role: null, isAuthenticated: false }),
+    set({ accessToken: null, userId: null, role: null, user: null, isAuthenticated: false }),
 }));
 
 let configured = false;
@@ -35,6 +40,7 @@ export function initAuthClient(onUnauthorized?: () => void) {
         const role = payload?.role as UserRole | undefined;
         if (userId && role) {
           useAuthStore.getState().setAuth(token, userId, role);
+          void fetchCurrentUser();
         }
       } else {
         useAuthStore.getState().clearAuth();
@@ -45,6 +51,15 @@ export function initAuthClient(onUnauthorized?: () => void) {
       onUnauthorized?.();
     },
   });
+}
+
+async function fetchCurrentUser() {
+  try {
+    const { data } = await apiClient.get<AuthUser>("/auth/me");
+    useAuthStore.getState().setUser(data);
+  } catch {
+    // keep JWT-derived auth if /me fails
+  }
 }
 
 export interface LoginCredentials {
@@ -59,11 +74,12 @@ export interface LoginResult {
 }
 
 export function useAuth() {
-  const { accessToken, userId, role, isAuthenticated, setAuth, clearAuth } = useAuthStore();
+  const { accessToken, userId, role, user, isAuthenticated, setAuth, clearAuth } = useAuthStore();
 
   const login = async (credentials: LoginCredentials) => {
     const { data } = await apiClient.post<LoginResult>("/auth/login", credentials);
     setAuth(data.access_token, data.user_id, data.role as UserRole);
+    await fetchCurrentUser();
     return data;
   };
 
@@ -81,6 +97,7 @@ export function useAuth() {
     accessToken,
     userId,
     role,
+    user,
     isAuthenticated,
     login,
     logout,

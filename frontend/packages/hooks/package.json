@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@itp/types": "workspace:*",
     "@itp/utils": "workspace:*",
     "@tanstack/react-query": "^5.45.0",
     "axios": "^1.7.2",

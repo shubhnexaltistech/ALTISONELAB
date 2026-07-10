@@ -1,6 +1,5 @@
-import { Users, ClipboardList, Star } from "lucide-react";
 import { useApiQuery } from "@itp/hooks";
-import { StatCard, SkeletonPage } from "@itp/ui";
+import { StatCard, SkeletonPage, MaterialIcon } from "@itp/ui";
 
 interface DashboardData {
   mentor_name: string;
@@ -13,19 +12,40 @@ export default function DashboardPage() {
   const { data, isLoading, isError } = useApiQuery<DashboardData>(["mentor-dashboard"], "/mentor/dashboard");
 
   if (isLoading) return <SkeletonPage />;
-  if (isError || !data) return <p className="text-red-600">Failed to load dashboard.</p>;
+  if (isError || !data) return <p className="text-error">Failed to load dashboard.</p>;
 
   return (
-    <div className="space-y-6">
+    <div className="fade-in space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Welcome, {data.mentor_name}</h1>
-        <p className="text-sm text-slate-500">Mentor dashboard overview</p>
+        <h1 className="text-h2 text-text-main">Welcome, {data.mentor_name}</h1>
+        <p className="text-body-sm text-text-muted">Mentor dashboard overview</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard label="Assigned Trainees" value={data.assigned_trainees} icon={<Users className="h-6 w-6" />} />
-        <StatCard label="Pending Worklogs" value={data.pending_worklogs} icon={<ClipboardList className="h-6 w-6" />} />
-        <StatCard label="Pending Evaluations" value={data.pending_evaluations} icon={<Star className="h-6 w-6" />} />
+      <div className="grid gap-6 sm:grid-cols-3">
+        <StatCard
+          label="Assigned Trainees"
+          value={data.assigned_trainees}
+          icon={<MaterialIcon name="groups" size={22} />}
+          iconBg="bg-primary-light"
+          iconColor="text-primary"
+          className="border-l-4 border-l-primary"
+        />
+        <StatCard
+          label="Pending Worklogs"
+          value={data.pending_worklogs}
+          icon={<MaterialIcon name="history_edu" size={22} />}
+          iconBg="bg-[#fff7ed]"
+          iconColor="text-[#ea580c]"
+          className="border-l-4 border-l-[#ea580c]"
+        />
+        <StatCard
+          label="Pending Evaluations"
+          value={data.pending_evaluations}
+          icon={<MaterialIcon name="rule" size={22} />}
+          iconBg="bg-[#faf5ff]"
+          iconColor="text-[#9333ea]"
+          className="border-l-4 border-l-[#9333ea]"
+        />
       </div>
     </div>
   );

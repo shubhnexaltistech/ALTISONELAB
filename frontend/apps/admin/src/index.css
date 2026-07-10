@@ -1,9 +1,173 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "@itp/ui/globals.css";
 
 @layer base {
   body {
-    @apply bg-slate-50 font-sans text-slate-900 antialiased;
+    @apply bg-admin-bg text-admin-text;
   }
+}
+
+/* Shell chrome (header + sidebar) — outside .admin-portal */
+.admin-shell {
+  color: #f1f5f9;
+}
+
+.admin-shell .admin-header {
+  color: #f1f5f9;
+}
+
+.admin-shell .admin-header .text-text-main,
+.admin-shell .admin-header h2 {
+  color: #f8fafc !important;
+}
+
+.admin-shell .admin-header .text-text-muted {
+  color: #94a3b8 !important;
+}
+
+.admin-shell .admin-sidebar {
+  color: #f1f5f9;
+}
+
+.admin-shell .admin-sidebar .text-text-main,
+.admin-shell .admin-sidebar .text-text-muted {
+  color: #f1f5f9 !important;
+}
+
+.admin-shell .admin-sidebar .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* Admin dark theme — overrides must beat Tailwind utilities */
+.admin-portal {
+  color: #e2e8f0;
+}
+
+.admin-portal h1,
+.admin-portal h2,
+.admin-portal h3,
+.admin-portal h4 {
+  color: #f1f5f9;
+}
+
+.admin-portal .text-slate-900,
+.admin-portal .text-text-main,
+.admin-portal .text-h3 {
+  color: #f1f5f9 !important;
+}
+
+.admin-portal .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+
+.admin-portal .text-slate-600,
+.admin-portal .text-slate-500,
+.admin-portal .text-slate-400,
+.admin-portal .text-text-muted {
+  color: #94a3b8 !important;
+}
+
+.admin-portal .text-slate-300 {
+  color: #cbd5e1 !important;
+}
+
+.admin-portal .text-brand-600 {
+  color: #60a5fa !important;
+}
+
+.admin-portal .text-emerald-600 {
+  color: #34d399 !important;
+}
+
+.admin-portal .text-violet-600 {
+  color: #a78bfa !important;
+}
+
+.admin-portal .text-red-600 {
+  color: #f87171 !important;
+}
+
+/* Cards & panels */
+.admin-portal .rounded-card,
+.admin-portal .shadow-card {
+  background-color: #161a26 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #e2e8f0 !important;
+  box-shadow: none !important;
+}
+
+/* Tables */
+.admin-portal .table-container table th {
+  color: #94a3b8 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.admin-portal .table-container table td {
+  color: #e2e8f0 !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.admin-portal .table-container table tbody tr:hover td {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.admin-portal .rounded-lg.border {
+  background-color: #161a26;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Form controls */
+.admin-portal label {
+  color: #cbd5e1 !important;
+}
+
+.admin-portal input:not([type="checkbox"]):not([type="radio"]),
+.admin-portal select,
+.admin-portal textarea {
+  background-color: #1c1f2e !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #f1f5f9 !important;
+}
+
+.admin-portal input::placeholder,
+.admin-portal textarea::placeholder {
+  color: #64748b !important;
+}
+
+.admin-portal select option {
+  background-color: #161a26;
+  color: #f1f5f9;
+}
+
+/* Modals */
+.admin-portal [role="dialog"] {
+  background-color: #161a26 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0 !important;
+}
+
+.admin-portal [role="dialog"] h2 {
+  color: #f1f5f9 !important;
+}
+
+.admin-portal [role="dialog"] .border-b,
+.admin-portal [role="dialog"] .border-t {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Skeleton loaders */
+.admin-portal .animate-pulse {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Recharts on dark background */
+.admin-portal .recharts-cartesian-grid line {
+  stroke: rgba(255, 255, 255, 0.08) !important;
+}
+
+.admin-portal .recharts-text {
+  fill: #94a3b8 !important;
+}
+
+.admin-portal .recharts-legend-item-text {
+  color: #cbd5e1 !important;
 }

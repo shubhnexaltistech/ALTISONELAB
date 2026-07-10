@@ -13,16 +13,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       disabled={disabled || loading}
       className={clsx(
-        "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex cursor-pointer items-center justify-center gap-2 rounded-btn border-none font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
         {
-          "bg-brand-600 text-white hover:bg-brand-700": variant === "primary",
-          "bg-slate-100 text-slate-900 hover:bg-slate-200": variant === "secondary",
-          "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50": variant === "outline",
-          "text-slate-600 hover:bg-slate-100 hover:text-slate-900": variant === "ghost",
-          "bg-red-600 text-white hover:bg-red-700": variant === "danger",
-          "h-8 px-3 text-sm": size === "sm",
-          "h-10 px-4 text-sm": size === "md",
-          "h-12 px-6 text-base": size === "lg",
+          "bg-primary text-white hover:-translate-y-px hover:opacity-90": variant === "primary",
+          "bg-surface-container-low text-on-surface hover:bg-surface-container": variant === "secondary",
+          "border border-border bg-white text-text-main hover:bg-bg-main": variant === "outline",
+          "text-text-muted hover:bg-primary-light hover:text-primary": variant === "ghost",
+          "bg-error text-white hover:opacity-90": variant === "danger",
+          "px-3.5 py-[7px] text-xs": size === "sm",
+          "px-6 py-3 text-sm": size === "md",
+          "px-6 py-3 text-base": size === "lg",
         },
         className
       )}

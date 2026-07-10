@@ -13,6 +13,7 @@ const ModulesPage = lazy(() => import("./pages/ModulesPage"));
 const MentorsPage = lazy(() => import("./pages/MentorsPage"));
 const QuizzesPage = lazy(() => import("./pages/QuizzesPage"));
 const AnnouncementsPage = lazy(() => import("./pages/AnnouncementsPage"));
+const EmployeesPage = lazy(() => import("./pages/EmployeesPage"));
 const AnalyticsPage = lazy(() => import("./pages/AnalyticsPage"));
 
 function Loader() {
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
       { path: "tracks", element: <Suspense fallback={<Loader />}><TracksPage /></Suspense> },
       { path: "modules", element: <Suspense fallback={<Loader />}><ModulesPage /></Suspense> },
       { path: "mentors", element: <Suspense fallback={<Loader />}><MentorsPage /></Suspense> },
+      { path: "employees", element: <Suspense fallback={<Loader />}><EmployeesPage /></Suspense> },
       { path: "quizzes", element: <Suspense fallback={<Loader />}><QuizzesPage /></Suspense> },
       { path: "announcements", element: <Suspense fallback={<Loader />}><AnnouncementsPage /></Suspense> },
       { path: "analytics", element: <Suspense fallback={<Loader />}><AnalyticsPage /></Suspense> },

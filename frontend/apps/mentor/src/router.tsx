@@ -10,6 +10,7 @@ const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 const TraineesPage = lazy(() => import("./pages/TraineesPage"));
 const WorklogsPage = lazy(() => import("./pages/WorklogsPage"));
 const EvaluationsPage = lazy(() => import("./pages/EvaluationsPage"));
+const AnnouncementsPage = lazy(() => import("./pages/AnnouncementsPage"));
 
 function Loader() {
   return <SkeletonPage />;
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       { path: "trainees", element: <Suspense fallback={<Loader />}><TraineesPage /></Suspense> },
       { path: "worklogs", element: <Suspense fallback={<Loader />}><WorklogsPage /></Suspense> },
       { path: "evaluations", element: <Suspense fallback={<Loader />}><EvaluationsPage /></Suspense> },
+      { path: "announcements", element: <Suspense fallback={<Loader />}><AnnouncementsPage /></Suspense> },
     ],
   },
   { path: "*", element: <Navigate to="/" replace /> },

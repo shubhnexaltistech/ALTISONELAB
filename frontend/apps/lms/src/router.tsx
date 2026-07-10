@@ -13,6 +13,9 @@ const QuizPage = lazy(() => import("./pages/QuizPage"));
 const WorklogsPage = lazy(() => import("./pages/WorklogsPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const LeaderboardPage = lazy(() => import("./pages/LeaderboardPage"));
+const AssignmentsPage = lazy(() => import("./pages/AssignmentsPage"));
+const SubmissionsPage = lazy(() => import("./pages/SubmissionsPage"));
+const AnnouncementsPage = lazy(() => import("./pages/AnnouncementsPage"));
 const EvaluationsPage = lazy(() => import("./pages/EvaluationsPage"));
 
 function Loader() {
@@ -36,6 +39,9 @@ export const router = createBrowserRouter([
       { path: "modules/:moduleId", element: <Suspense fallback={<Loader />}><ModuleDetailPage /></Suspense> },
       { path: "quiz/:quizId", element: <Suspense fallback={<Loader />}><QuizPage /></Suspense> },
       { path: "worklogs", element: <Suspense fallback={<Loader />}><WorklogsPage /></Suspense> },
+      { path: "assignments", element: <Suspense fallback={<Loader />}><AssignmentsPage /></Suspense> },
+      { path: "submissions", element: <Suspense fallback={<Loader />}><SubmissionsPage /></Suspense> },
+      { path: "announcements", element: <Suspense fallback={<Loader />}><AnnouncementsPage /></Suspense> },
       { path: "evaluations", element: <Suspense fallback={<Loader />}><EvaluationsPage /></Suspense> },
       { path: "profile", element: <Suspense fallback={<Loader />}><ProfilePage /></Suspense> },
       { path: "leaderboard", element: <Suspense fallback={<Loader />}><LeaderboardPage /></Suspense> },

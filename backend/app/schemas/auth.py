@@ -28,5 +28,15 @@ class ResetPasswordRequest(BaseModel):
     new_password: str
 
 
+class MeResponse(BaseModel):
+    user_id: str
+    role: str
+    name: str
+    email: Optional[str] = None
+    unique_id: Optional[str] = None
+    emp_id: Optional[str] = None
+    track_id: Optional[str] = None
+
+
 class MessageResponse(BaseModel):
     message: str

@@ -86,8 +86,8 @@ export default function QuizzesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Quizzes</h1>
-          <p className="text-sm text-slate-500">Module quizzes and assessments</p>
+          <h1 className="text-2xl font-bold text-admin-text">Quizzes</h1>
+          <p className="text-sm text-slate-400">Module quizzes and assessments</p>
         </div>
         <Button onClick={() => setOpen(true)}><Plus className="h-4 w-4" /> Create Quiz</Button>
       </div>
@@ -129,7 +129,7 @@ export default function QuizzesPage() {
           <Input label="Option A" {...register("option_a")} error={errors.option_a?.message} />
           <Input label="Option B" {...register("option_b")} error={errors.option_b?.message} />
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Correct Answer</label>
+            <label className="mb-1.5 block text-sm font-medium text-slate-300">Correct Answer</label>
             <select {...register("correct_option")} className="h-10 w-full rounded-lg border border-slate-300 px-3 text-sm">
               <option value="0">Option A</option>
               <option value="1">Option B</option>

@@ -1,10 +1,15 @@
 export { Button, type ButtonProps } from "./components/Button";
 export { Input, type InputProps } from "./components/Input";
 export { Modal, type ModalProps } from "./components/Modal";
-export { Table, type TableProps, type Column } from "./components/Table";
+export { Table, DataTable, type TableProps, type Column, type DataTableColumn, type DataTableProps } from "./components/Table";
 export { Badge, statusBadge, type BadgeProps } from "./components/Badge";
-export { Card, CardHeader, StatCard } from "./components/Card";
-export { Sidebar, AppLayout, type NavItem } from "./components/Sidebar";
+export { Card, CardHeader, type CardProps } from "./components/Card";
+export { StatCard, type StatCardProps } from "./components/StatCard";
+export { Sidebar, useSidebarState, type NavItem, type SidebarProps, type SidebarUser, type PortalVariant } from "./components/Sidebar";
+export { Header, type HeaderProps } from "./components/Header";
+export { LoginScreen, type LoginScreenProps, type LoginField, type LoginVariant } from "./components/LoginScreen";
+export { MaterialIcon, type MaterialIconProps } from "./components/MaterialIcon";
+export { DashboardLayout, AppShell, AppLayout, type DashboardLayoutProps } from "./layouts/DashboardLayout";
 export { Skeleton, SkeletonCard, SkeletonTable, SkeletonPage } from "./components/Skeleton";
 export { ProtectedRoute } from "./components/ProtectedRoute";
 export { ErrorState } from "./components/ErrorState";

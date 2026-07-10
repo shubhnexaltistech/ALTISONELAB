@@ -80,8 +80,8 @@ export default function ModulesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Modules</h1>
-          <p className="text-sm text-slate-500">Learning modules per track</p>
+          <h1 className="text-2xl font-bold text-admin-text">Modules</h1>
+          <p className="text-sm text-slate-400">Learning modules per track</p>
         </div>
         <Button onClick={() => setOpen(true)}><Plus className="h-4 w-4" /> Add Module</Button>
       </div>
@@ -103,7 +103,7 @@ export default function ModulesPage() {
         footer={<Button onClick={handleSubmit((d) => createMutation.mutate(d))} loading={createMutation.isPending}>Create</Button>}>
         <form className="space-y-4">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Track</label>
+            <label className="mb-1.5 block text-sm font-medium text-slate-300">Track</label>
             <select {...register("track_id")} className="h-10 w-full rounded-lg border border-slate-300 px-3 text-sm">
               <option value="">Select track</option>
               {tracks?.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}

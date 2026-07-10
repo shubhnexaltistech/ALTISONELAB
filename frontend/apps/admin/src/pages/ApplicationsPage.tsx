@@ -62,13 +62,13 @@ export default function ApplicationsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Applications</h1>
-          <p className="text-sm text-slate-500">{data?.total ?? 0} total applications</p>
+          <h1 className="text-2xl font-bold text-admin-text">Applications</h1>
+          <p className="text-sm text-slate-400">{data?.total ?? 0} total applications</p>
         </div>
         <select
           value={status}
           onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-          className="h-10 rounded-lg border border-slate-300 bg-white px-3 text-sm"
+          className="h-10 rounded-lg border border-white/10 bg-admin-surface px-3 text-sm text-admin-text"
         >
           <option value="">All statuses</option>
           <option value="pending">Pending</option>
@@ -125,7 +125,7 @@ export default function ApplicationsPage() {
       {data && data.pages > 1 && (
         <div className="flex items-center justify-center gap-2">
           <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Previous</Button>
-          <span className="text-sm text-slate-600">Page {page} of {data.pages}</span>
+          <span className="text-sm text-slate-400">Page {page} of {data.pages}</span>
           <Button variant="outline" size="sm" disabled={page >= data.pages} onClick={() => setPage((p) => p + 1)}>Next</Button>
         </div>
       )}
