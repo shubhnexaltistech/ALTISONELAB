@@ -71,6 +71,26 @@ powershell -ExecutionPolicy Bypass -File scripts\docker-prod.ps1
 
 Docker is **not required** for local development. You only need **MongoDB** + **Python** + **Node**.
 
+### Quick start — full stack (recommended)
+
+```powershell
+cd "e:\nexaltis lab"
+powershell -ExecutionPolicy Bypass -File scripts\start-all-dev.ps1
+```
+
+Starts backend (:8000) + all four frontends (:3000–:3003).  
+Stop everything: `powershell -ExecutionPolicy Bypass -File scripts\stop-all-dev.ps1`
+
+| URL | Portal |
+|-----|--------|
+| http://localhost:8000/docs | API docs |
+| http://localhost:3000 | Landing |
+| http://localhost:3001 | Admin |
+| http://localhost:3002 | LMS |
+| http://localhost:3003 | Mentor |
+
+**Dev branch:** [`shubh-work`](https://github.com/shubhnexaltistech/ALTISONELAB/tree/shubh-work) — see `TEAM_GUIDE.md` for full documentation.
+
 ### Step 1 — Install MongoDB (one-time)
 
 Download and install **MongoDB Community Server**:  
@@ -78,7 +98,7 @@ https://www.mongodb.com/try/download/community
 
 During install, check **"Install MongoDB as a Service"**.
 
-### Step 2 — Start backend (Terminal 1)
+### Step 2 — Start backend only (Terminal 1)
 
 ```powershell
 cd "e:\nexaltis lab"
@@ -89,14 +109,26 @@ This uses `.env.development` (in-memory Redis, no Docker).
 API: http://localhost:8000/docs  
 Admin: `admin@altisonelabz.com` / `changeme123`
 
-### Step 3 — Start frontend (Terminal 2)
+### Step 3 — Start frontend apps (Terminal 2+)
 
 ```powershell
 cd "e:\nexaltis lab\frontend"
 npx pnpm install
 npx pnpm dev:admin     # http://localhost:3001
 npx pnpm dev:landing   # http://localhost:3000
+npx pnpm dev:lms       # http://localhost:3002
+npx pnpm dev:mentor    # http://localhost:3003
 ```
+
+### Default logins (local dev)
+
+| Portal | Login | Password |
+|--------|-------|----------|
+| Admin | `admin@altisonelabz.com` | `changeme123` |
+| LMS | `trainee@altisonelabz.com` or `A1FS26010001` | `changeme123` |
+| Mentor | `mentor@altisonelabz.com` or `MENTOR001` | `changeme123` |
+
+Seed scripts: `python seed_tracks.py`, `create_admin.py`, `seed_trainee.py`, `seed_mentor.py` (from `backend/` venv).
 
 ### Optional — Install Docker later
 
@@ -123,9 +155,10 @@ Then run `docker compose up -d --build`.
 - **Frontend**: React 18, Vite 5, TypeScript, Tailwind, TanStack Query, Zustand
 - **Deploy**: Docker Compose, Nginx, Gunicorn + Uvicorn
 
-## API Docs
+## Documentation
 
-http://localhost:8000/docs
+- **`TEAM_GUIDE.md`** — Full team onboarding: architecture, file map, API endpoints, design system, git workflow
+- **API Docs:** http://localhost:8000/docs
 
 ## Key Features (Production)
 

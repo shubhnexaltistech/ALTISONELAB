@@ -2,6 +2,27 @@
 
 > **Purpose:** This document explains the full project flow, architecture, and what every important file does — so you can walk your team through the codebase line by line.
 
+**Last updated:** July 2026  
+**Active dev branch:** [`shubh-work`](https://github.com/shubhnexaltistech/ALTISONELAB/tree/shubh-work) (do not push UI/API work to `main` without review)
+
+---
+
+## Recent Updates (July 2026)
+
+| Area | What changed |
+|------|----------------|
+| **UI / Design** | AltisOneLabz design system ported — shared `DashboardLayout`, `Header`, `Sidebar`, `LoginScreen`, `StatCard`, `DataTable`, Tailwind tokens, `globals.css` |
+| **Admin portal** | Dark theme (`admin-bg`, `admin-card`), header/sidebar visibility fixes, `Employees` page, Font Awesome icons |
+| **Landing** | `HomePage` fetches tracks from API; new `TrackPage` at `/track/:slug` |
+| **LMS** | New routes: Assignments, Submissions, Announcements; updated nav matching source design |
+| **Mentor** | Announcements page added |
+| **Backend** | `GET /auth/me`, public track by slug, settings, notify, payment-proof; LMS assignments + tracker; admin employees + upload |
+| **Models** | `assignment`, `submission`, `settings`; `Track` extended with `slug`, `fee_inr`, `duration`, `highlights`, `outcomes` |
+| **Packages** | New `@itp/types` shared TypeScript types |
+| **Seeds** | `seed_tracks.py` — 7 IT tracks (FS, DS, FL, CD, UX, PB, CY) with slugs and fees |
+| **Windows fix** | `file_upload.py` — optional `python-magic` (no libmagic crash on Windows) |
+| **Dev scripts** | `start-all-dev.ps1` / `stop-all-dev.ps1` for full local stack |
+
 ---
 
 ## Table of Contents
@@ -22,6 +43,8 @@
 14. [Docker & Production Deployment](#14-docker--production-deployment)
 15. [Default Dev Credentials](#15-default-dev-credentials)
 16. [Key File Walkthroughs (Line by Line)](#16-key-file-walkthroughs-line-by-line)
+17. [AltisOneLabz Design System](#17-altisonelabz-design-system)
+18. [Git Workflow & Branching](#18-git-workflow--branching)
 
 ---
 
@@ -92,14 +115,14 @@ E:\nexaltis lab\
 │   │   ├── config.py           # Reads .env settings
 │   │   ├── database.py         # MongoDB connection + Beanie init
 │   │   ├── celery_app.py       # Celery worker configuration
-│   │   ├── models\             # MongoDB document schemas (13 files)
+│   │   ├── models\             # MongoDB document schemas (16 files)
 │   │   ├── routers\            # HTTP route handlers
 │   │   │   ├── auth.py         # Login, logout, refresh, password reset
 │   │   │   ├── public.py       # Apply, tracks, payment order (no auth)
 │   │   │   ├── webhooks.py     # Razorpay payment webhook
 │   │   │   ├── auth_deps.py    # JWT middleware helpers
-│   │   │   ├── admin\          # 8 admin route files
-│   │   │   ├── lms\            # 8 trainee route files
+│   │   │   ├── admin\          # 10 admin route files (+ employees, upload)
+│   │   │   ├── lms\            # 10 trainee route files (+ assignments, tracker)
 │   │   │   └── mentor\         # 4 mentor route files
 │   │   ├── services\           # Business logic (not in routers)
 │   │   ├── schemas\            # Request/response Pydantic DTOs
@@ -121,8 +144,9 @@ E:\nexaltis lab\
 │   │   ├── lms\                # Trainee portal (port 3002)
 │   │   └── mentor\             # Mentor portal (port 3003)
 │   ├── packages\
-│   │   ├── ui\                 # Shared React components
+│   │   ├── ui\                 # Shared React components + layouts + globals.css
 │   │   ├── hooks\              # Shared hooks (auth, API)
+│   │   ├── types\              # Shared TypeScript types (@itp/types)
 │   │   └── utils\              # API client, config, dates
 │   ├── package.json            # Root scripts (dev:admin, build:all, etc.)
 │   └── .env                    # VITE_* variables for all apps
@@ -156,9 +180,9 @@ E:\nexaltis lab\
 | Portal | URL (dev) | Who uses it | Main pages |
 |--------|-----------|-------------|------------|
 | **Landing** | http://localhost:3000 | Public | Home, Apply, Payment, Status |
-| **Admin** | http://localhost:3001 | Staff | Dashboard, Applications, Tracks, Modules, Mentors, Quizzes, Announcements, Analytics |
-| **LMS** | http://localhost:3002 | Trainees | Dashboard, Modules, Quiz, Worklogs, Evaluations, Leaderboard, Profile |
-| **Mentor** | http://localhost:3003 | Mentors | Dashboard, Trainees, Worklogs, Evaluations |
+| **Admin** | http://localhost:3001 | Staff | Dashboard, Applications, Tracks, Modules, Mentors, **Employees**, Quizzes, Announcements, Analytics |
+| **LMS** | http://localhost:3002 | Trainees | Dashboard, Modules, Quiz, Worklogs, **Assignments**, **Submissions**, **Announcements**, Evaluations, Leaderboard, Profile |
+| **Mentor** | http://localhost:3003 | Mentors | Dashboard, Trainees, Worklogs, Evaluations, **Announcements** |
 
 Each portal is a **separate Vite app** but shares code via `frontend/packages/`.
 
@@ -269,6 +293,8 @@ Evaluations
 | Create mentors + assign | `MentorsPage.tsx` | `admin/mentors.py` |
 | Create quizzes | `QuizzesPage.tsx` | `admin/quizzes.py` |
 | Post announcements | `AnnouncementsPage.tsx` | `admin/announcements.py` |
+| Manage employees | `EmployeesPage.tsx` | `admin/employees.py` |
+| Upload files | (shared upload util) | `admin/upload.py` |
 | View analytics | `AnalyticsPage.tsx` | `admin/analytics.py` |
 
 ---
@@ -379,13 +405,16 @@ POST /api/v1/auth/logout
 | `announcement.py` | `announcements` | Admin announcements (optionally filtered by track) |
 | `payment.py` | `payments` | Razorpay payment records |
 | `audit_log.py` | `audit_log` | Admin action audit trail |
+| `assignment.py` | `assignments` | LMS assignments per module |
+| `submission.py` | `submissions` | Trainee assignment submissions |
+| `settings.py` | `settings` | Public site settings (fees, contact, etc.) |
 
 ### Routers (`backend/app/routers/`)
 
 | File | Prefix | Auth | Purpose |
 |------|--------|------|---------|
-| `auth.py` | `/api/v1/auth` | Public | Login, logout, refresh, forgot/reset password |
-| `public.py` | `/api/v1/public` | Public | Apply, list tracks, payment order, application status |
+| `auth.py` | `/api/v1/auth` | Public | Login, logout, refresh, **GET /me**, forgot/reset password |
+| `public.py` | `/api/v1/public` | Public | Apply, tracks, **track by slug**, **settings**, **notify**, **payment-proof**, payment order, status |
 | `webhooks.py` | `/api/v1/webhooks` | Signature | Razorpay payment webhook |
 | `auth_deps.py` | — | — | `get_current_user`, `require_role` dependencies |
 | `admin/dashboard.py` | `/api/v1/admin` | admin | Dashboard stats |
@@ -396,6 +425,8 @@ POST /api/v1/auth/logout
 | `admin/quizzes.py` | `/api/v1/admin/quizzes` | admin | Create/list/deactivate quizzes |
 | `admin/announcements.py` | `/api/v1/admin/announcements` | admin | CRUD announcements |
 | `admin/analytics.py` | `/api/v1/admin/analytics` | admin | Quiz pass rates, worklog stats |
+| `admin/employees.py` | `/api/v1/admin/employees` | admin | Employee directory CRUD |
+| `admin/upload.py` | `/api/v1/admin/upload` | admin | File upload endpoint |
 | `lms/dashboard.py` | `/api/v1/lms` | trainee | Trainee dashboard data |
 | `lms/modules.py` | `/api/v1/lms/modules` | trainee | List modules, module detail |
 | `lms/quizzes.py` | `/api/v1/lms/quizzes` | trainee | Start quiz, submit answers, history |
@@ -404,6 +435,8 @@ POST /api/v1/auth/logout
 | `lms/evaluations.py` | `/api/v1/lms/evaluations` | trainee | View evaluation results |
 | `lms/leaderboard.py` | `/api/v1/lms/leaderboard` | trainee | Track leaderboard |
 | `lms/announcements.py` | `/api/v1/lms/announcements` | trainee | View announcements |
+| `lms/assignments.py` | `/api/v1/lms/assignments` | trainee | List assignments, submit work |
+| `lms/tracker.py` | `/api/v1/lms/tracker` | trainee | Session / heartbeat tracking |
 | `mentor/dashboard.py` | `/api/v1/mentor` | mentor | Mentor dashboard stats |
 | `mentor/trainees.py` | `/api/v1/mentor/trainees` | mentor | List assigned trainees |
 | `mentor/worklogs.py` | `/api/v1/mentor/worklogs` | mentor | Review worklogs |
@@ -466,7 +499,7 @@ Pydantic models for **API request/response shapes** (separate from DB models):
 | Script | Command | Creates |
 |--------|---------|---------|
 | `create_admin.py` | `python create_admin.py` | Admin user |
-| `seed_tracks.py` | `python seed_tracks.py` | 4 default tracks |
+| `seed_tracks.py` | `python seed_tracks.py` | 7 IT tracks (FS, DS, FL, CD, UX, PB, CY) with slugs & fees |
 | `seed_trainee.py` | `python seed_trainee.py` | Dev trainee account |
 | `seed_mentor.py` | `python seed_mentor.py` | Dev mentor account |
 
@@ -489,8 +522,9 @@ frontend/
 │   └── mentor/           # @itp/mentor — port 3003
 │
 └── packages/
-    ├── ui/               # @itp/ui — shared components
+    ├── ui/               # @itp/ui — shared components, layouts, globals.css
     ├── hooks/            # @itp/hooks — auth, API hooks
+    ├── types/            # @itp/types — shared TS types (user, track, api)
     └── utils/            # @itp/utils — API client, config, dates
 ```
 
@@ -510,7 +544,8 @@ apps/{portal}/src/
 
 | File | Route | What it does |
 |------|-------|--------------|
-| `HomePage.tsx` | `/` | Marketing homepage with CTA to apply |
+| `HomePage.tsx` | `/` | Marketing homepage — fetches tracks from `GET /public/tracks` |
+| `TrackPage.tsx` | `/track/:slug` | Track detail page — `GET /public/tracks/{slug}` |
 | `ApplyPage.tsx` | `/apply` | Application form — fetches tracks, submits to API |
 | `PaymentPage.tsx` | `/payment/:id` | Razorpay checkout integration |
 | `ApplicationStatusPage.tsx` | `/status/:id` | Shows application status (pending/paid/verified) |
@@ -527,7 +562,8 @@ apps/{portal}/src/
 | `MentorsPage.tsx` | `/mentors` | Create mentors, assign to trainee ranges |
 | `QuizzesPage.tsx` | `/quizzes` | Create quizzes with questions |
 | `AnnouncementsPage.tsx` | `/announcements` | Post announcements |
-| `AnalyticsPage.tsx` | `/analytics` | Charts — quiz pass rate, worklog stats |
+| `EmployeesPage.tsx` | `/employees` | Employee / trainee directory |
+| `AnalyticsPage.tsx` | `/analytics` | Charts — quiz pass rate, worklog stats (dark Recharts theme) |
 
 ### LMS app pages
 
@@ -539,6 +575,9 @@ apps/{portal}/src/
 | `ModuleDetailPage.tsx` | `/modules/:id` | Task list for a module |
 | `QuizPage.tsx` | `/quiz/:id` | Take quiz, submit answers |
 | `WorklogsPage.tsx` | `/worklogs` | Submit and view daily worklogs |
+| `AssignmentsPage.tsx` | `/assignments` | View module assignments |
+| `SubmissionsPage.tsx` | `/submissions` | View assignment submissions |
+| `AnnouncementsPage.tsx` | `/announcements` | Read admin announcements |
 | `EvaluationsPage.tsx` | `/evaluations` | View evaluation grades |
 | `LeaderboardPage.tsx` | `/leaderboard` | Track rankings |
 | `ProfilePage.tsx` | `/profile` | Edit profile, change password, submit GitHub |
@@ -552,30 +591,46 @@ apps/{portal}/src/
 | `TraineesPage.tsx` | `/trainees` | List assigned trainees |
 | `WorklogsPage.tsx` | `/worklogs` | Approve/reject worklogs |
 | `EvaluationsPage.tsx` | `/evaluations` | Draft and submit evaluation scores |
+| `AnnouncementsPage.tsx` | `/announcements` | View announcements |
 
 ### Shared packages
 
-#### `@itp/ui` (`packages/ui/src/components/`)
+#### `@itp/ui` (`packages/ui/src/`)
 
-| Component | Used for |
-|-----------|----------|
+| File / Component | Used for |
+|------------------|----------|
+| `globals.css` | Design tokens, Material Symbols, LMS nav classes, CSS variables |
+| `layouts/DashboardLayout.tsx` | Portal shell — sidebar + header + main (`admin-portal` class for admin) |
+| `components/Header.tsx` | Frosted top bar (per-portal height; admin dark variant) |
+| `components/Sidebar.tsx` | Nav sidebar — variants: `lms`, `mentor`, `admin` |
+| `components/LoginScreen.tsx` | Shared login UI — LMS, Mentor, Admin variants |
+| `components/StatCard.tsx` | Dashboard metric cards (`tone="dark"` for admin) |
+| `components/DataTable.tsx` | Source-styled data tables |
+| `components/MaterialIcon.tsx` | Google Material Symbols wrapper (LMS/Mentor) |
 | `Button.tsx` | Primary/secondary/outline buttons with loading state |
 | `Input.tsx` | Form inputs with label and error message |
 | `Card.tsx` | Content cards with header |
-| `Table.tsx` | Data tables |
+| `Table.tsx` | Legacy table wrapper |
 | `Modal.tsx` | Dialog overlays |
 | `Badge.tsx` | Status badges (pending, approved, etc.) |
-| `Sidebar.tsx` | Navigation sidebar + AppLayout wrapper |
 | `Skeleton.tsx` | Loading placeholders |
 | `ProtectedRoute.tsx` | Auth guard — redirects to login |
 | `ErrorState.tsx` | Error display with retry |
+
+#### `@itp/types` (`packages/types/src/`)
+
+| File | Exports |
+|------|---------|
+| `user.ts` | User / profile types |
+| `track.ts` | Track types (slug, fees, highlights) |
+| `api.ts` | Common API response shapes |
 
 #### `@itp/hooks` (`packages/hooks/src/`)
 
 | File | Exports | Purpose |
 |------|---------|---------|
-| `useAuth.ts` | `useAuth`, `useAuthStore`, `initAuthClient` | Login/logout, Zustand auth state |
-| `useAuthBootstrap.ts` | `useAuthBootstrap` | Restore session on page load via refresh token |
+| `useAuth.ts` | `useAuth`, `useAuthStore`, `initAuthClient` | Login/logout, **`GET /auth/me`** profile, Zustand auth state |
+| `useAuthBootstrap.ts` | `useAuthBootstrap` | Restore session on page load via refresh + `/me` |
 | `useApi.ts` | `useApiQuery`, `useApiMutation` | TanStack Query wrappers with auth |
 | `useDebounce.ts` | `useDebounce` | Input debouncing |
 | `useLocalStorage.ts` | `useLocalStorage` | Persist state in localStorage |
@@ -639,6 +694,10 @@ Full interactive docs: **http://localhost:8000/docs**
 |--------|----------|-------------|
 | GET | `/health` | Health check |
 | GET | `/api/v1/public/tracks` | List active tracks |
+| GET | `/api/v1/public/tracks/{slug}` | Track detail by slug |
+| GET | `/api/v1/public/settings` | Public site settings |
+| POST | `/api/v1/public/notify` | Notify / interest form |
+| POST | `/api/v1/public/payment-proof` | Submit payment proof |
 | POST | `/api/v1/public/apply` | Submit application |
 | GET | `/api/v1/public/applications/{id}/status` | Check status |
 | POST | `/api/v1/public/payments/create-order` | Create Razorpay order |
@@ -649,6 +708,7 @@ Full interactive docs: **http://localhost:8000/docs**
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/api/v1/auth/login` | Login |
+| GET | `/api/v1/auth/me` | Current user profile (Bearer token) |
 | POST | `/api/v1/auth/refresh` | Refresh token |
 | POST | `/api/v1/auth/logout` | Logout |
 | POST | `/api/v1/auth/forgot-password` | Request reset |
@@ -667,6 +727,8 @@ Full interactive docs: **http://localhost:8000/docs**
 | GET/POST/DELETE | `/api/v1/admin/quizzes` | Quiz CRUD |
 | GET/POST/DELETE | `/api/v1/admin/announcements` | Announcements |
 | GET | `/api/v1/admin/analytics` | Analytics data |
+| GET/POST | `/api/v1/admin/employees` | Employee directory |
+| POST | `/api/v1/admin/upload` | File upload |
 
 ### LMS (requires role=trainee)
 
@@ -682,6 +744,9 @@ Full interactive docs: **http://localhost:8000/docs**
 | GET | `/api/v1/lms/evaluations` | Evaluations |
 | GET | `/api/v1/lms/leaderboard` | Leaderboard |
 | GET | `/api/v1/lms/announcements` | Announcements |
+| GET/POST | `/api/v1/lms/assignments` | Assignments & submissions |
+| POST | `/api/v1/lms/tracker/session` | Start learning session |
+| POST | `/api/v1/lms/tracker/heartbeat` | Session heartbeat |
 
 ### Mentor (requires role=mentor)
 
@@ -927,6 +992,71 @@ pytest
 
 ---
 
+## 17. AltisOneLabz Design System
+
+Design tokens live in `frontend/tailwind.config.js` and `frontend/packages/ui/src/globals.css`.
+
+### Color tokens (admin dark portal)
+
+| Token | Hex | Usage |
+|-------|-----|--------|
+| `admin-bg` | `#06080A` | Page & header background |
+| `admin-card` | `#161A26` | Cards, panels |
+| `admin-surface` | `#1C1F2E` | Inputs, elevated surfaces |
+| `admin-text` | `#F1F5F9` | Primary text |
+| `primary` | `#00288e` | Brand / active nav |
+
+### Layout tokens
+
+| Token | Value |
+|-------|-------|
+| `sidebar-width` | 280px (LMS) |
+| `admin-sidebar` | 260px |
+| `mentor-sidebar` | 256px |
+| `header-height` | 80px (LMS) |
+| `admin-header` | 64px |
+| `rounded-card` | 20px |
+
+### Portal-specific UI
+
+| Portal | Icons | Theme |
+|--------|-------|-------|
+| Landing | Font Awesome 6 | Light marketing |
+| Admin | Font Awesome 6 | Dark (`admin-shell`, `admin-portal` CSS in `apps/admin/src/index.css`) |
+| LMS | Material Symbols + Inter | Light LMS nav |
+| Mentor | Material Symbols + Inter | Light slate sidebar |
+
+### Admin dark-theme CSS
+
+- `apps/admin/src/index.css` — overrides light Tailwind utilities inside `.admin-portal` (main content)
+- `DashboardLayout` adds `admin-shell` on root + `admin-portal` on `<main>` for admin variant
+- `Header` / `Sidebar` use explicit light text classes (outside `.admin-portal`)
+
+---
+
+## 18. Git Workflow & Branching
+
+| Branch | Purpose |
+|--------|---------|
+| `main` | Stable baseline — do not push experimental UI work directly |
+| `shubh-work` | Active development branch for AltisOneLabz port |
+
+```powershell
+# Clone and work on the dev branch
+git clone https://github.com/shubhnexaltistech/ALTISONELAB.git
+cd ALTISONELAB
+git checkout shubh-work
+
+# Push changes (example)
+git add -A
+git commit -m "Your message"
+git push origin shubh-work
+```
+
+**Remote:** https://github.com/shubhnexaltistech/ALTISONELAB
+
+---
+
 ## Quick Reference Card
 
 ```
@@ -948,4 +1078,4 @@ pytest
 
 ---
 
-*Generated for AltisOne ITP v3.0 — use this document to onboard your team and explain every part of the system.*
+*AltisOne ITP v3.0 + AltisOneLabz UI port — use this document to onboard your team and explain every part of the system.*
