@@ -1,0 +1,25 @@
+{
+  "name": "altisone-itp-frontend",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev:landing": "pnpm --filter @itp/landing dev",
+    "dev:admin": "pnpm --filter @itp/admin dev",
+    "dev:lms": "pnpm --filter @itp/lms dev",
+    "dev:mentor": "pnpm --filter @itp/mentor dev",
+    "build:all": "pnpm -r build",
+    "build:landing": "pnpm --filter @itp/landing build",
+    "build:admin": "pnpm --filter @itp/admin build",
+    "build:lms": "pnpm --filter @itp/lms build",
+    "build:mentor": "pnpm --filter @itp/mentor build",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.4.5"
+  }
+}

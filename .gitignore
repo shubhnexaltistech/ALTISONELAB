@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment
+.env
+.env.local
+frontend/.env
+frontend/.env.production
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
+
+# Node
+node_modules/
+dist/
+.pnpm-store/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+mongo_data/

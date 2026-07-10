@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+  nginx:
+    image: nginx:1.25-alpine
+    profiles:
+      - production
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./frontend/apps/landing/dist:/usr/share/nginx/html/landing:ro
+      - ./frontend/apps/admin/dist:/usr/share/nginx/html/admin:ro
+      - ./frontend/apps/lms/dist:/usr/share/nginx/html/lms:ro
+      - ./frontend/apps/mentor/dist:/usr/share/nginx/html/mentor:ro
+      - ./uploads:/usr/share/nginx/uploads:ro
+    depends_on:
+      - api
+    restart: always
+
+  api:
+    build: ./backend
+    env_file: .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  celery:
+    build: ./backend
+    command: celery -A app.celery_app:celery_app worker --loglevel=info
+    env_file: .env
+    depends_on:
+      - redis
+      - mongodb
+    restart: always
+
+  celery-beat:
+    build: ./backend
+    command: celery -A app.celery_app:celery_app beat --loglevel=info
+    env_file: .env
+    depends_on:
+      - redis
+    restart: always
+
+  mongodb:
+    image: mongo:7.0
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+    restart: always
+    healthcheck:
+      test: ["CMD", "mongosh", "-u", "${MONGO_USER}", "-p", "${MONGO_PASS}", "--authenticationDatabase", "admin", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --requirepass ${REDIS_PASS}
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASS}", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  mongo_data:

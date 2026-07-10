@@ -1,0 +1,25 @@
+{
+  "name": "@itp/hooks",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@itp/utils": "workspace:*",
+    "@tanstack/react-query": "^5.45.0",
+    "axios": "^1.7.2",
+    "react": "^18.3.1",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "typescript": "^5.4.5"
+  }
+}

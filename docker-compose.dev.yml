@@ -1,0 +1,17 @@
+# Docker Compose — local development overrides
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+services:
+  api:
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: development
+
+  mongodb:
+    ports:
+      - "27017:27017"
+
+  redis:
+    ports:
+      - "6379:6379"
